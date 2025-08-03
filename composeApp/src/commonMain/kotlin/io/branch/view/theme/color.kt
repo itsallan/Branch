@@ -1,4 +1,4 @@
-package io.branch.theme
+package io.branch.view.theme
 
 import androidx.compose.ui.graphics.Color
 

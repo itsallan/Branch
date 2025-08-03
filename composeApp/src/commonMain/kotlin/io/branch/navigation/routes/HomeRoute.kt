@@ -1,4 +1,4 @@
-package io.branch.view.navigation.routes
+package io.branch.navigation.routes
 
 import kotlinx.serialization.Serializable
 
