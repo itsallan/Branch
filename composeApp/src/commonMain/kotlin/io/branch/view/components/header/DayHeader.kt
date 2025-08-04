@@ -19,6 +19,7 @@ import com.composables.icons.lucide.BookMarked
 import com.composables.icons.lucide.Bookmark
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Share
+import com.composables.icons.lucide.Share2
 
 @Composable
 fun DayHeader(
@@ -75,7 +76,7 @@ fun DayHeader(
                 )
             ) {
                 Icon(
-                    imageVector = Lucide.Share,
+                    imageVector = Lucide.Share2,
                     contentDescription = "Share"
                 )
             }

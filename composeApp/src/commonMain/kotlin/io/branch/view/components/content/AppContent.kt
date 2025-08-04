@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import io.branch.data.model.ScriptureData
+import io.branch.utils.getTodayIndex
 
 
 @Composable
@@ -32,8 +35,18 @@ fun ScriptureContent(
     onShare: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(scriptures) {
+        if (scriptures.isNotEmpty()) {
+            val todayIndex = getTodayIndex(scriptures)
+            listState.animateScrollToItem(todayIndex)
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .background(
@@ -62,6 +75,7 @@ fun ScriptureContent(
                 }
             }
         }
+        
         Box(
             modifier = Modifier
                 .fillMaxWidth()
