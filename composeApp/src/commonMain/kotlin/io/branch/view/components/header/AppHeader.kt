@@ -35,9 +35,6 @@ import kotlin.time.ExperimentalTime
 fun AppHeader(
     title: String = "Branches",
     subtitle: String = "John 15:5",
-    scriptures: List<ScriptureData> = emptyList(),
-    selectedDayIndex: Int = 0,
-    onDaySelected: (Int) -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
     modifier: Modifier = Modifier
 ) {

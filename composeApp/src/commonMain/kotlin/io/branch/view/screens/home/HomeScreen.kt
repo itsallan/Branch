@@ -7,26 +7,31 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import io.branch.data.repository.ScriptureRepository
-import io.branch.utils.getTodayIndex
+import io.branch.data.audio.PlatformAudioPlayer
+import io.branch.view.components.content.ScriptureContent
 import io.branch.view.components.header.AppHeader
 import io.branch.view.components.shared.HomeIndicator
-import io.branch.view.components.content.ScriptureContent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController
 ) {
-    val scriptures = ScriptureRepository.getWeeklyScriptures()
-    var selectedDay by remember { mutableStateOf(getTodayIndex(scriptures)) }
-    var bookmarkedDays by remember { mutableStateOf(setOf<Int>()) }
+    val coroutineScope = remember { CoroutineScope(Dispatchers.Main) }
+    val audioPlayer = remember { PlatformAudioPlayer() }
+    val viewModel = remember { VerseViewModel(audioPlayer, coroutineScope) }
+    var isVerseFavorited by remember { mutableStateOf(false) }
+
+    val verseUiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -34,28 +39,32 @@ fun HomeScreen(
         contentWindowInsets = WindowInsets(0)
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             AppHeader(
-                scriptures = scriptures,
-                selectedDayIndex = selectedDay,
-                onDaySelected = { selectedDay = it },
             )
+
             ScriptureContent(
-                scriptures = scriptures,
-                selectedDayIndex = selectedDay,
-                bookmarkedDays = bookmarkedDays,
-                onBookmarkToggle = { index ->
-                    bookmarkedDays = if (bookmarkedDays.contains(index)) {
-                        bookmarkedDays - index
-                    } else {
-                        bookmarkedDays + index
-                    }
-                },
-                onShare = { index ->
+                verse = verseUiState.verseData,
+                audioState = verseUiState.audioState,
+                onPlayAudio = { viewModel.playAudio() },
+                onVerseCardClick = {
 
                 },
+                onVerseFavoriteClick = {
+                    isVerseFavorited = !isVerseFavorited
+                },
+                onVerseShareClick = {
+                    // Handle verse share
+                },
+                onVerseBibleClick = {
+                    // Handle open in bible
+                },
+                isVerseLoading = verseUiState.isLoading,
+                isAudioLoading = false,
+                verseError = verseUiState.error,
+                isVerseFavorited = isVerseFavorited,
+                navController = navController,
                 modifier = Modifier.weight(1f)
             )
 
