@@ -181,14 +181,12 @@ fun DetailsScreen(
                                 }
                             }
 
-                            // Magazine-Style Content Layout - Fixed spacing
                             Column(modifier = Modifier.fillMaxWidth()) {
-                                // Floating Scripture Card - Fixed offset
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(horizontal = 24.dp)
-                                        .offset(y = (-32).dp), // Reduced offset
+                                        .offset(y = (-32).dp),
                                     shape = RoundedCornerShape(24.dp),
                                     colors = CardDefaults.cardColors(
                                         containerColor = MaterialTheme.colorScheme.surface
@@ -198,11 +196,10 @@ fun DetailsScreen(
                                     )
                                 ) {
                                     Box(modifier = Modifier.fillMaxWidth()) {
-                                        // Large Quote Mark - Fixed string
                                         Text(
-                                            text = "\u201C", // Unicode left double quotation mark
+                                            text = "\u201C",
                                             style = MaterialTheme.typography.displayLarge.copy(
-                                                fontSize = 80.sp, // Reduced from 120sp
+                                                fontSize = 80.sp,
                                                 fontFamily = FontFamily.Serif
                                             ),
                                             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
@@ -214,7 +211,7 @@ fun DetailsScreen(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(
-                                                    top = 40.dp, // Reduced top padding
+                                                    top = 40.dp,
                                                     start = 32.dp,
                                                     end = 32.dp,
                                                     bottom = 32.dp
@@ -264,7 +261,6 @@ fun DetailsScreen(
                                     }
                                 }
 
-                                // Main Content with Section Numbers - Fixed spacing
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -399,7 +395,7 @@ fun DetailsScreen(
                                                             modifier = Modifier.fillMaxWidth(),
                                                             horizontalArrangement = Arrangement.spacedBy(
                                                                 12.dp
-                                                            ) // Reduced spacing
+                                                            )
                                                         ) {
                                                             pair.forEach { scripture ->
                                                                 ScriptureCard(

@@ -34,7 +34,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
-fun HomeScreen(
+fun VerseScreen(
     navController: NavController
 ) {
     val coroutineScope = remember { CoroutineScope(Dispatchers.Main) }

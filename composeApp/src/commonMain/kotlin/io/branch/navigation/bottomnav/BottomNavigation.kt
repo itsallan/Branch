@@ -28,7 +28,8 @@ import androidx.navigation.NavController
 import com.composables.icons.lucide.BookOpen
 import com.composables.icons.lucide.CircleUserRound
 import com.composables.icons.lucide.House
-import io.branch.view.screens.verses.HomeScreen
+import io.branch.view.screens.home.HomeScreen
+import io.branch.view.screens.verses.VerseScreen
 
 @Composable
 fun BottomNavigation(
@@ -98,12 +99,11 @@ fun BottomNavigation(
         ) {
             when (selectedTab) {
                 0 -> {
-                   // TodayScreen(navController)
+                   HomeScreen(navController)
                 }
 
                 1 -> {
-                    HomeScreen(navController)
-                   // DevotionScreen(navController)
+                    VerseScreen(navController)
                 }
 
                 2 -> {

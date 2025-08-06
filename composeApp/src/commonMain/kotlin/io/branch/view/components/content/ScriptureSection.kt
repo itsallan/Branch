@@ -99,15 +99,18 @@ fun ScriptureContent(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize().padding(bottom = 80.dp)) {
+    Box(modifier = modifier
+        .fillMaxSize()
+      //  .padding(bottom = 80.dp)
+    ) {
         if (verses.isNotEmpty()) {
             VerticalPager(
                 state = pagerState,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
+                    .fillMaxSize(),
+//                    .background(
+//                        color = MaterialTheme.colorScheme.surfaceVariant,
+//                    ),
                 contentPadding = PaddingValues(top = 34.dp),
                 pageSpacing = 0.dp
             ) { page ->
