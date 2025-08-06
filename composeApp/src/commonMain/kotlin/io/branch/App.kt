@@ -32,7 +32,6 @@ fun App() {
     BranchTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-          //  color = MaterialTheme.colorScheme.background
         ) {
            BranchNavHost()
         }

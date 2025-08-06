@@ -14,22 +14,22 @@ fun VerseContent (
     actions: VerseActions,
     navController: NavController
     ) {
-        VerseCard(
-            devotional = uiState.verse,
-            navController = navController
-        )
+    VerseCard(
+        devotional = uiState.verse,
+        navController = navController
+    )
 
-        ReflectionCard(
-            verse = uiState.verse,
-            audioState = uiState.audioState,
-            onPlayAudio = actions.onPlayAudio,
-            onFavoriteClick = actions.onFavoriteClick,
-            onShareClick = actions.onShareClick,
-            onBibleClick = actions.onBibleClick,
-            onCardClick = actions.onCardClick,
-            isAudioLoading = uiState.isAudioLoading,
-            isFavorited = uiState.isFavorited
-        )
+    ReflectionCard(
+        verse = uiState.verse,
+        audioState = uiState.audioState,
+        onPlayAudio = actions.onPlayAudio,
+        onFavoriteClick = actions.onFavoriteClick,
+        onShareClick = actions.onShareClick,
+        onBibleClick = actions.onBibleClick,
+        onCardClick = actions.onCardClick,
+        isAudioLoading = uiState.isAudioLoading,
+        isFavorited = uiState.isFavorited
+    )
 
-        PrayerCard(verse = uiState.verse)
-    }
+    PrayerCard(verse = uiState.verse)
+}

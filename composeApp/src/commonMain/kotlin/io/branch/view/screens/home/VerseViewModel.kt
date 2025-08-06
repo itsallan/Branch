@@ -3,6 +3,7 @@ package io.branch.view.screens.home
 import com.fleeksoft.ksoup.Ksoup
 import io.branch.data.audio.AudioPlayer
 import io.branch.utils.audio.AudioState
+import io.branch.utils.dates.VerseWithDate
 import io.branch.utils.network.NetworkClient
 import io.branch.utils.verse.UiState
 import io.branch.utils.verse.VerseOfTheDay
@@ -160,29 +161,130 @@ class VerseViewModel(
         val day = date.day.toString().padStart(2, '0')
         return "$year$month$day"
     }
-
     suspend fun fetchVerseForDate(date: LocalDate): VerseOfTheDay {
         val dateString = formatDateForUrl(date)
         val url = "https://www.heartlight.org/cgi-shl/todaysverse.cgi?day=${dateString}&ver=niv"
 
+        println("Fetching verse for date: $dateString")
         try {
             val response = NetworkClient.httpClient.get(url)
             val htmlContent = response.bodyAsText()
 
             val doc = Ksoup.parse(htmlContent)
 
+            var verseReference = ""
+            var verseText = ""
+            var audioUrl = ""
+            var thoughts = ""
+            var prayer = ""
+            var imageUrl = ""
+
+            // Same parsing logic as scrapeVerseOfTheDay()
+            doc.selectFirst(".subpage-head h1 span.h1-devo")?.let { titleElement ->
+                val fullTitle = titleElement.parent()?.text() ?: ""
+                val referenceMatch = Regex("Today's Verse:\\s*(.+)").find(fullTitle)
+                if (referenceMatch != null) {
+                    verseReference = referenceMatch.groupValues[1].trim()
+                }
+            }
+
+            doc.selectFirst("div.lead.well")?.let { verseElement ->
+                val fullText = verseElement.ownText()
+                if (fullText.isNotEmpty()) {
+                    verseText = fullText.trim()
+                }
+            }
+
+            doc.selectFirst("audio#player source[type=\"audio/mpeg\"]")?.let { audioElement ->
+                audioUrl = audioElement.attr("src")
+                if (audioUrl.startsWith("/")) {
+                    audioUrl = "https://www.heartlight.org$audioUrl"
+                }
+            }
+
+            doc.selectFirst("div.thought-text")?.let { thoughtElement ->
+                thoughts = thoughtElement.text().trim()
+            }
+
+            doc.selectFirst("div.prayer-text")?.let { prayerElement ->
+                prayer = prayerElement.text().trim()
+            }
+
+            doc.selectFirst(".subpage-head .header-image-bar img.header-image")?.let { imgElement ->
+                imageUrl = imgElement.attr("src")
+                if (imageUrl.startsWith("//")) {
+                    imageUrl = "https:$imageUrl"
+                } else if (imageUrl.startsWith("/")) {
+                    imageUrl = "https://www.heartlight.org$imageUrl"
+                }
+            }
+
+            // Fallback for illustration image
+            if (imageUrl.isEmpty()) {
+                doc.selectFirst("img[title*=\"Illustration of\"]")?.let { illustrationImg ->
+                    imageUrl = illustrationImg.attr("src")
+                    if (imageUrl.startsWith("//")) {
+                        imageUrl = "https:$imageUrl"
+                    } else if (imageUrl.startsWith("/")) {
+                        imageUrl = "https://www.heartlight.org$imageUrl"
+                    }
+                }
+            }
 
             return VerseOfTheDay(
-                reference = "Np Reference",
-                text = "No verse for $dateString",
-                audioUrl = "",
-                thoughts = "",
-                prayer = ""
+                reference = verseReference,
+                text = verseText,
+                audioUrl = audioUrl,
+                thoughts = thoughts,
+                prayer = prayer,
+                imageUrl = imageUrl
             )
         } catch (e: Exception) {
             return VerseOfTheDay(
                 reference = "Error",
-                text = "Could not load verse for $dateString: ${e.message}"
+                text = "Could not load verse for: ${e.message}",
+                audioUrl = "",
+                thoughts = "",
+                prayer = "",
+                imageUrl = ""
+            )
+        }
+    }
+
+    // Method to fetch multiple verses for date range
+    suspend fun fetchVersesForDateRange(dates: List<LocalDate>): List<VerseWithDate> {
+        return dates.map { date ->
+            try {
+                val verse = fetchVerseForDate(date)
+                VerseWithDate(date = date, verse = verse)
+            } catch (e: Exception) {
+                VerseWithDate(
+                    date = date,
+                    verse = VerseOfTheDay(
+                        reference = "Error",
+                        text = "Could not load verse for"
+                    )
+                )
+            }
+        }
+    }
+
+    fun playAudioForUrl(audioUrl: String) {
+        if (audioUrl.isEmpty()) return
+
+        try {
+            if (audioPlayer.isPlaying()) {
+                pauseAudio()
+                return
+            }
+
+            audioPlayer.play(audioUrl)
+            updateAudioState(isPlaying = true)
+            startProgressUpdates()
+        } catch (e: Exception) {
+            updateAudioState(isPlaying = false)
+            _uiState.value = _uiState.value.copy(
+                error = "Error playing audio: ${e.message}"
             )
         }
     }
