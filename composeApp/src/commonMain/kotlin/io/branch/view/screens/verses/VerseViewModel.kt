@@ -1,4 +1,4 @@
-package io.branch.view.screens.home
+package io.branch.view.screens.verses
 
 import com.fleeksoft.ksoup.Ksoup
 import io.branch.data.audio.AudioPlayer

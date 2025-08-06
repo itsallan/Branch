@@ -8,6 +8,9 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinx.serialization)
 
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+
 }
 
 kotlin {
@@ -34,6 +37,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.core.splashscreen)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -62,6 +66,9 @@ kotlin {
 
             implementation(libs.ksoup)
             implementation(libs.ktor.client.content.negotiation)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -99,7 +106,12 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     debugImplementation(compose.uiTooling)
+    ksp(libs.androidx.room.compiler)
 }
 

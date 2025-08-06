@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -38,7 +37,7 @@ import io.branch.utils.verse.VerseUIState
 import io.branch.utils.verse.loadSingleVerse
 import io.branch.view.components.cards.utils.LoadingCard
 import io.branch.view.components.cards.utils.SwipeIndicator
-import io.branch.view.screens.home.VerseViewModel
+import io.branch.view.screens.verses.VerseViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.TimeZone
@@ -100,7 +99,7 @@ fun ScriptureContent(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize().padding(bottom = 80.dp)) {
         if (verses.isNotEmpty()) {
             VerticalPager(
                 state = pagerState,
@@ -120,7 +119,10 @@ fun ScriptureContent(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        val displayText = if (verseWithDate.isToday) "Today" else formatDateForDisplay(verseWithDate.date)
+                        val displayText =
+                            if (verseWithDate.isToday) "Today" else formatDateForDisplay(
+                                verseWithDate.date
+                            )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
@@ -131,18 +133,11 @@ fun ScriptureContent(
                             )
 
                             Spacer(modifier = Modifier.width(8.dp))
-//                            Box(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .padding(16.dp),
-//                            ) {
-                                Text(
-                                    text = displayText,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    // color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                          //  }
+                            Text(
+                                text = displayText,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
 

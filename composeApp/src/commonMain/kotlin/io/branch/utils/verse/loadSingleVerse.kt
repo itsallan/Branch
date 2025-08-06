@@ -2,7 +2,7 @@ package io.branch.utils.verse
 
 import io.branch.utils.dates.VerseWithDate
 import io.branch.utils.dates.formatDateForDisplay
-import io.branch.view.screens.home.VerseViewModel
+import io.branch.view.screens.verses.VerseViewModel
 import kotlinx.datetime.LocalDate
 
 suspend fun loadSingleVerse(
